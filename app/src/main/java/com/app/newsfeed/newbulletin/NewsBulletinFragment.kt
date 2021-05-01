@@ -7,6 +7,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.RecyclerView
+import com.app.newsfeed.MainActivity
 import com.app.newsfeed.R
 import com.app.newsfeed.databinding.FragmentNewsBulletinBinding
 import com.app.newsfeed.network.ServiceApiInterface
@@ -18,6 +20,7 @@ class NewsBulletinFragment : Fragment() {
     private lateinit var viewModelFactory: NewsBulletinViewModelFactory
     private lateinit var viewModel: NewsBulletinViewModel
 
+    private lateinit var rcScrollListener: RecyclerView.OnScrollListener
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,6 +38,8 @@ class NewsBulletinFragment : Fragment() {
             navigateToNewArticle(article)
         })
         binding.newsRcv.adapter = adapter
+
+        rcScrollListener = (activity as MainActivity).listener
 
         binding.newsRcv.addItemDecoration(
             DividerItemDecoration(
@@ -82,6 +87,16 @@ class NewsBulletinFragment : Fragment() {
 
     private fun updateNewsFeed(countryCode: String) {
         viewModel.getNewsFeed(countryCode)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.newsRcv.addOnScrollListener(rcScrollListener)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        binding.newsRcv.removeOnScrollListener(rcScrollListener)
     }
 
 }

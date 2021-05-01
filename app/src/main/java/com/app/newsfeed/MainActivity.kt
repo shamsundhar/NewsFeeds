@@ -20,70 +20,15 @@ import kotlinx.android.synthetic.main.layout_toolbar.*
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private lateinit var navController: NavController
-    private lateinit var drawerLayout: DrawerLayout
-    private lateinit var appBarConfiguration: AppBarConfiguration
-    private lateinit var viewModelFactory: NewsBulletinViewModelFactory
-    private lateinit var viewModel: NewsBulletinViewModel
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        viewModelFactory =
-            NewsBulletinViewModelFactory(NewsBulletinRepository(ServiceApiInterface.invoke()))
-        viewModel = ViewModelProvider(this, viewModelFactory).get(NewsBulletinViewModel::class.java)
-
-        binding.viewModel = viewModel
-        binding.lifecycleOwner = this
-
-        val adapter = NewsBulletinAdapter(NewsArticleClickListener { article ->
-//            navigateToNewArticle(article)
-        })
-
-//        navController = findNavController(R.id.newsNavHost)
-//        drawerLayout = binding.drawerLayout
-
-//        appBarConfiguration = AppBarConfiguration(navController.graph, drawerLayout)
-
-//        NavigationUI.setupActionBarWithNavController(this, navController, drawerLayout)
-//        NavigationUI.setupWithNavController(binding.navigationView, navController)
-
-        val layoutManager = LinearLayoutManager(this)
-        // TODO doesn't match fortnightly style
-        val divider = DividerItemDecoration(this, layoutManager.orientation)
-
-        list.adapter = adapter
-        list.layoutManager = layoutManager
-        list.addItemDecoration(divider)
-
-        if (viewModel.articles.value == null) {
-            viewModel.getNewsFeed()
-        }
-
-        viewModel.articles.observe(this, {
-            it?.let {
-                adapter.submitList(it)
-            }
-        })
-
     }
 
-    override fun onResume() {
-        super.onResume()
-        list.addOnScrollListener(listener)
-    }
-
-    override fun onPause() {
-        super.onPause()
-        list.removeOnScrollListener(listener)
-    }
-
-    private val listener = object : RecyclerView.OnScrollListener() {
+    val listener = object : RecyclerView.OnScrollListener() {
         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
             toolbar.translate(dy)
         }
     }
-
-
 }
