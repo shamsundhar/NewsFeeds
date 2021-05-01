@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">NewsFeed</string>
+    <!-- TODO: Remove or change this placeholder text -->
+
+    <string name="news_feed_title">News Feed</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="news_content_place_holder">Hyderabad High Court directs Telangana to decide on curfews, lockdowns to contain Covid</string>
+</resources>
