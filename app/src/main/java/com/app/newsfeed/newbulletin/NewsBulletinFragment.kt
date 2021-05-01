@@ -12,6 +12,7 @@ import com.app.newsfeed.MainActivity
 import com.app.newsfeed.R
 import com.app.newsfeed.databinding.FragmentNewsBulletinBinding
 import com.app.newsfeed.network.ServiceApiInterface
+import com.app.newsfeed.utils.FortnightlyToolbar
 
 
 class NewsBulletinFragment : Fragment() {
@@ -19,8 +20,7 @@ class NewsBulletinFragment : Fragment() {
     private lateinit var binding: FragmentNewsBulletinBinding
     private lateinit var viewModelFactory: NewsBulletinViewModelFactory
     private lateinit var viewModel: NewsBulletinViewModel
-
-    private lateinit var rcScrollListener: RecyclerView.OnScrollListener
+    private lateinit var appBar : FortnightlyToolbar
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,7 +39,7 @@ class NewsBulletinFragment : Fragment() {
         })
         binding.newsRcv.adapter = adapter
 
-        rcScrollListener = (activity as MainActivity).listener
+        appBar = (activity as MainActivity).appBar
 
         binding.newsRcv.addItemDecoration(
             DividerItemDecoration(
@@ -91,12 +91,18 @@ class NewsBulletinFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        binding.newsRcv.addOnScrollListener(rcScrollListener)
+        binding.newsRcv.addOnScrollListener(listener)
     }
 
     override fun onPause() {
         super.onPause()
-        binding.newsRcv.removeOnScrollListener(rcScrollListener)
+        binding.newsRcv.removeOnScrollListener(listener)
+    }
+
+    val listener = object : RecyclerView.OnScrollListener() {
+        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+            appBar.translate(dy)
+        }
     }
 
 }
