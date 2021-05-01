@@ -20,8 +20,12 @@ class MainActivity : AppCompatActivity() {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             if(destination.id == R.id.newsBulletinFragment){
                 menu.setImageResource(R.drawable.vd_menu)
+                menu.setOnClickListener(null)
             }else{
                 menu.setImageResource(R.drawable.vd_back)
+                menu.setOnClickListener{
+                    navController.navigateUp();
+                }
             }
         }
     }
