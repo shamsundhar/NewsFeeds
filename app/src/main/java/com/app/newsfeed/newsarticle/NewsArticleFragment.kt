@@ -21,8 +21,11 @@ class NewsArticleFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding =
-            DataBindingUtil.inflate(inflater, R.layout.fragment_news_article, container, false)
+        binding = DataBindingUtil.inflate(
+            inflater, R.layout.fragment_news_article,
+            container,
+            false
+        )
 
 
         val newsArticleFragmentArgs by navArgs<NewsArticleFragmentArgs>()
