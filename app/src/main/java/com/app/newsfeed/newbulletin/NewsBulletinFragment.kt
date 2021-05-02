@@ -14,7 +14,6 @@ import com.app.newsfeed.databinding.FragmentNewsBulletinBinding
 import com.app.newsfeed.network.ServiceApiInterface
 import com.app.newsfeed.utils.FortnightlyToolbar
 
-
 class NewsBulletinFragment : Fragment() {
 
     private lateinit var binding: FragmentNewsBulletinBinding
@@ -61,44 +60,28 @@ class NewsBulletinFragment : Fragment() {
 
         appBar = (activity as MainActivity).appBar
 
-        viewModel.articles.observe(viewLifecycleOwner, {
+        viewModel.articlesData.observe(viewLifecycleOwner, {
             it?.let {
                 adapter.submitList(it)
             }
         })
 
-        if (viewModel.articles.value == null) {
+        if (viewModel.articlesData.value == null) {
             viewModel.getNewsFeed()
         }
-
-        setHasOptionsMenu(true)
         return binding.root
     }
 
-
+    /**
+     * Loads the detailed new article screen
+     *
+     * @param article: The actual NewsArticle object with the data
+     *
+     */
     private fun navigateToNewArticle(article: Article) {
         findNavController().navigate(
             NewsBulletinFragmentDirections.actionNewsBulletinFragmentToNewsArticleFragment(article)
         )
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.country_overflow_menu, menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.india -> updateNewsFeed("in")
-            R.id.nz -> updateNewsFeed("nz")
-            R.id.au -> updateNewsFeed("au")
-            R.id.us -> updateNewsFeed("us")
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
-    private fun updateNewsFeed(countryCode: String) {
-        viewModel.getNewsFeed(countryCode)
     }
 
     override fun onResume() {
@@ -116,5 +99,11 @@ class NewsBulletinFragment : Fragment() {
             appBar.translate(dy)
         }
     }
+}
 
+enum class Country(val countryCode: String) {
+    INDIA("in"),
+    NEW_ZEALAND("nz"),
+    AUSTRALIA("au"),
+    UNITED_STATES("us")
 }

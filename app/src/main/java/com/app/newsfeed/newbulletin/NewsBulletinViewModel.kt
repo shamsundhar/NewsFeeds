@@ -11,10 +11,17 @@ class NewsBulletinViewModel(private val newsBulletinRepository: NewsBulletinRepo
 
     private var _articles: MutableLiveData<List<Article>> = MutableLiveData()
 
-    val articles: LiveData<List<Article>>
+    val articlesData: LiveData<List<Article>>
         get() = _articles
 
-    fun getNewsFeed(countryCode: String = "in") {
+    /**
+     * Makes a network call to get the Current news articles for the given country
+     * subscribe to [articlesData] LiveData to get notified for [NewsFeed.articles] response update
+     *
+     * @param countryCode refer [Country] for current supported Countries
+     *
+     */
+    fun getNewsFeed(countryCode: String = Country.UNITED_STATES.countryCode) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 val response = newsBulletinRepository.getNewsFeed(countryCode, "entertainment")

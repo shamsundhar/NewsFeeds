@@ -14,9 +14,14 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         appBar = toolbar
+
         val navController = Navigation.findNavController(this,R.id.newsNavHost)
+
+        //Setting the options/back button based on the current screen
+        //Left the menu button implementation out to keep it simple
         navController.addOnDestinationChangedListener { _, destination, _ ->
             if(destination.id == R.id.newsBulletinFragment){
                 menu.setImageResource(R.drawable.vd_menu)
