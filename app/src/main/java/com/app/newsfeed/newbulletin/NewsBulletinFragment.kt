@@ -20,44 +20,56 @@ class NewsBulletinFragment : Fragment() {
     private lateinit var binding: FragmentNewsBulletinBinding
     private lateinit var viewModelFactory: NewsBulletinViewModelFactory
     private lateinit var viewModel: NewsBulletinViewModel
-    private lateinit var appBar : FortnightlyToolbar
+    private lateinit var appBar: FortnightlyToolbar
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding =
-            DataBindingUtil.inflate(inflater, R.layout.fragment_news_bulletin, container, false)
-        viewModelFactory =
-            NewsBulletinViewModelFactory(NewsBulletinRepository(ServiceApiInterface.invoke()))
-        viewModel = ViewModelProvider(this, viewModelFactory).get(NewsBulletinViewModel::class.java)
 
-        binding.viewModel = viewModel
-        binding.lifecycleOwner = this
-        val adapter = NewsBulletinAdapter(NewsArticleClickListener { article ->
-            navigateToNewArticle(article)
-        })
-        binding.newsRcv.adapter = adapter
+        binding = DataBindingUtil.inflate(
+            inflater,
+            R.layout.fragment_news_bulletin,
+            container,
+            false
+        )
 
-        appBar = (activity as MainActivity).appBar
-
-        binding.newsRcv.addItemDecoration(
-            DividerItemDecoration(
-                context,
-                DividerItemDecoration.VERTICAL
+        viewModelFactory = NewsBulletinViewModelFactory(
+            NewsBulletinRepository(
+                ServiceApiInterface()
             )
         )
 
+        viewModel = ViewModelProvider(this, viewModelFactory)
+            .get(NewsBulletinViewModel::class.java).also {
+                binding.viewModel = it
+                binding.lifecycleOwner = this
+            }
 
-        if (viewModel.articles.value == null) {
-            viewModel.getNewsFeed()
+
+        val adapter = NewsBulletinAdapter(NewsArticleClickListener { article ->
+            navigateToNewArticle(article)
+        })
+
+        binding.newsRcv.also {
+            it.adapter = adapter
+            it.addItemDecoration( DividerItemDecoration(
+                context,
+                DividerItemDecoration.VERTICAL
+            ))
         }
+
+        appBar = (activity as MainActivity).appBar
 
         viewModel.articles.observe(viewLifecycleOwner, {
             it?.let {
                 adapter.submitList(it)
             }
         })
+
+        if (viewModel.articles.value == null) {
+            viewModel.getNewsFeed()
+        }
 
         setHasOptionsMenu(true)
         return binding.root

@@ -3,13 +3,11 @@ package com.app.newsfeed.newbulletin
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.*
 
 class NewsBulletinViewModel(private val newsBulletinRepository: NewsBulletinRepository) :
     ViewModel() {
-
-    private val viewModelJob = Job()
-    private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
     private var _articles: MutableLiveData<List<Article>> = MutableLiveData()
 
@@ -17,7 +15,7 @@ class NewsBulletinViewModel(private val newsBulletinRepository: NewsBulletinRepo
         get() = _articles
 
     fun getNewsFeed(countryCode: String = "in") {
-        uiScope.launch {
+        viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 val response = newsBulletinRepository.getNewsFeed(countryCode, "entertainment")
                 withContext(Dispatchers.Main) {
@@ -25,11 +23,5 @@ class NewsBulletinViewModel(private val newsBulletinRepository: NewsBulletinRepo
                 }
             }
         }
-    }
-
-
-    override fun onCleared() {
-        super.onCleared()
-        viewModelJob.cancel()
     }
 }

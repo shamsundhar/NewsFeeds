@@ -18,9 +18,6 @@ fun TextView.setDuration(item: Article?) {
         val hours = minutes / 60
         val days = hours / 24
 
-        println("Publish : " + publishedAtDate + " | Current : " + Date() + " | H : " + hours)
-
-
         text = if (days > 0) {
             "$days D ago"
         } else {
@@ -56,16 +53,6 @@ fun ImageView.loadImage(item: Article?) {
             .into(this)
     }
 
-}
-
-fun String.toDate(
-    dateFormat: String = "yyyy-MM-dd HH:mm:ss", timeZone: TimeZone = TimeZone.getTimeZone(
-        "UTC"
-    )
-): Date {
-    val parser = SimpleDateFormat(dateFormat, Locale.getDefault())
-    parser.timeZone = timeZone
-    return parser.parse(this)
 }
 
 fun convertToNewFormat(dateStr: String?): Date? {
